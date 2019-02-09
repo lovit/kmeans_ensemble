@@ -1,0 +1,2 @@
+class KMeansEnsemble:
+    raise NotImplemented
