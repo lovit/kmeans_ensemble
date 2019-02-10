@@ -48,7 +48,8 @@ class KMeansEnsemble:
 
     def fit_predict(self, X):
         self._ensemble(X)
-        # self._agglomerative(self.affinity)
+        self._agglomerative(self.affinity)
+        return self.labels
 
     def _ensemble(self, X):
         """
@@ -92,7 +93,7 @@ class KMeansEnsemble:
 
     def _agglomerative(self, affinity):
         self.labels, self.history = single_linkage(
-            affinity, self.n_clusters)
+            affinity, self.n_clusters, self.verbose)
 
 def affinity_as_csr(dok, n_rows):
     n = len(dok)
