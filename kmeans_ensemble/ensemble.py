@@ -83,6 +83,11 @@ class KMeansEnsemble:
                         key = (i, j)
                         affinity[key] += 1
 
+            if self.verbose and i_iter % 10 == 0:
+                print('\rIteration {} / {} ...'.format(i_iter, self.n_ensembles), end='')
+        if self.verbose:
+            print('\rIteration {0} / {0} was done'.format(self.n_ensembles))
+
         self.affinity = affinity_as_csr(affinity, n_rows)
 
     def _agglomerative(self, affinity):
