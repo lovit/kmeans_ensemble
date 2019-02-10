@@ -1,6 +1,8 @@
+from collections import defaultdict
 from sklearn.cluster import KMeans
+from scipy.sparse import csr_matrix
 import numpy as np
-from hierarchical import single_linkage
+from .hierarchical import single_linkage
 
 
 class KMeansEnsemble:
@@ -46,7 +48,7 @@ class KMeansEnsemble:
 
     def fit_predict(self, X):
         self._ensemble(X)
-        self._agglomerative(self.affinity)
+        # self._agglomerative(self.affinity)
 
     def _ensemble(self, X):
         """
@@ -96,5 +98,5 @@ def affinity_as_csr(dok, n_rows):
         rows[ptr] = i
         cols[ptr] = j
         data[ptr] = c
-    csr = csr_matrix((data, (rows, cols)), size=(n_rows, n_rows))
+    csr = csr_matrix((data, (rows, cols)), shape=(n_rows, n_rows))
     return csr
