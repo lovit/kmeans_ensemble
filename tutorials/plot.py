@@ -1,10 +1,28 @@
 import numpy as np
 from bokeh.plotting import figure
-from bokeh.palettes import magma
+from bokeh.palettes import magma, viridis
 
 
-def draw_scatterplot(X, y, size=5):
+def draw_scatterplot(X, y, title=None,
+    width=800, height=800, size=5):
+
     """
+    Arguments
+    ---------
+    X : numpy.ndarray
+        shape = (n_rows, 2)
+    y : numpy.ndarray
+        shape = (n_rows,)
+        Data labels
+    title : str or None
+        Figure title. Default is 'Untitled'
+    width : int
+        Figure width. default is 800
+    height : int
+        Figure height. default is 800
+    size : int
+        Point size
+
     Usage
     -----
         >>> from bokeh.plotting import output_notebook, show
@@ -14,9 +32,12 @@ def draw_scatterplot(X, y, size=5):
         >>> show(p)
     """
 
-    p = figure()
+    if title is None:
+        title = 'Untitled'
+
+    p = figure(title=title, width=width, height=height)
     n_uniques = np.unique(y).shape[0]
-    colors = magma(n_uniques + 1)
+    colors = viridis(n_uniques)
 
     for label in range(n_uniques):
         indices = np.where(y == label)[0]
