@@ -92,7 +92,7 @@ class KMeansEnsemble:
         self.affinity = affinity_as_csr(affinity, n_rows)
 
     def _agglomerative(self, affinity):
-        self.labels, self.history = single_linkage(
+        self.history, self.labels = single_linkage(
             affinity, self.n_clusters, self.verbose)
 
 def affinity_as_csr(dok, n_rows):
