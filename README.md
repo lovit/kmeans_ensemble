@@ -87,7 +87,8 @@ kmeans_ensemble = KMeansEnsemble(n_clusters, n_ensembles, n_units)
 labels = kmeans_ensemble.fit_predict(X)
 ```
 
-Out[]```
+Out[]
+```
 Iteration 1000 / 1000 was done
 Agglomerative clustering iters = 998 was done
 ```
@@ -100,7 +101,8 @@ sparsity = 1 - ((n_data + nnz) / (n_data ** 2))
 print('sparsity of affinity = {:.4}'.format(sparsity))
 ```
 
-Out[]```
+Out[]
+```
 sparsity of affinity = 0.9709
 ```
 
@@ -167,7 +169,8 @@ save(gp)
 reset_output()
 ```
 
-Out[]```
+Out[]
+```
 Iteration 1000 / 1000 was done
 Agglomerative clustering iters = 998 was done
 ```
@@ -180,7 +183,8 @@ sparsity = 1 - ((n_data + nnz) / (n_data ** 2))
 print('sparsity of affinity = {:.4}'.format(sparsity))
 ```
 
-Out[]```
+Out[]
+```
 sparsity of affinity = 0.9255
 ```
 
@@ -208,7 +212,8 @@ save(gp)
 reset_output()
 ```
 
-Out[]```
+Out[]
+```
 Iteration 1000 / 1000 was done
 Agglomerative clustering iters = 998 was done
 ```
@@ -221,7 +226,8 @@ sparsity = 1 - ((n_data + nnz) / (n_data ** 2))
 print('sparsity of affinity = {:.4}'.format(sparsity))
 ```
 
-Out[]```
+Out[]
+```
 sparsity of affinity = 0.7958
 ```
 
@@ -247,7 +253,8 @@ save(gp)
 reset_output()
 ```
 
-Out[]```
+Out[]
+```
 Iteration 1000 / 1000 was done
 Agglomerative clustering iters = 998 was done
 ```
@@ -260,7 +267,8 @@ sparsity = 1 - ((n_data + nnz) / (n_data ** 2))
 print('sparsity of affinity = {:.4}'.format(sparsity))
 ```
 
-Out[]```
+Out[]
+```
 sparsity of affinity = 0.2301
 ```
 
