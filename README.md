@@ -42,7 +42,7 @@ export_png(p, 'kmeans_ensemble_kmeansresult.png')
 
 이처럼 분포가 복잡한 데이터를 군집화 하기 위해 Spectral Clustering 과 같은 방법이 제안되기도 했지만, 이 역시 parameter setting 을 잘 설정해주지 않으면 군집화가 잘 되지 않습니다.
 
-이는 Kernerl k-means 역시 동일합니다. 어떠한 kernel function 을 이용할 것인지에 따라 데이터 간의 affinity 정의가 달라지기 때문에 군집화 결과가 다르게 학습될 수 있습니다.
+Kernerl k-means 역시 parameter 에 민감합니다. 어떠한 kernel function 을 이용할 것인지에 따라 데이터 간의 affinity 정의가 달라져 최종 군집화 결과가 다르게 학습될 수 있습니다.
 
 
 ```python
@@ -56,13 +56,15 @@ export_png(p, 'kmeans_ensemble_scresult.png')
 
 ![](tutorials/kmeans_ensemble_scresult.png)
 
-이러한 문제의 해법으로 제안된 것 중 하나는 clustering ensemble 입니다. 군집화 알고리즘은 어떤 것을 이용하여도 관계 없습니다. k-means 가 학습 속도가 빠르기 때문에 이를 이용하여 앙상블을 할 수 있습니다. 한 번의 k-means 의 학습 결과 각 점들의 군집 아이디 (labels) 를 얻을 수 있습니다. 이 정보로부터 같은 군집에 속한 점들 간에 co-occurrence 를 1 씩 더합니다. k-means 를 100 번 학습하면 어떤 두 점은 최대 100 번의 co-occurrence 를 얻을 수 있고, 어떤 점은 한 번도 같은 군집에 속한 적이 없을 수도 있습니다. 이 co-occurrence 값을 점간의 affinity 로 이용합니다.
+이러한 문제의 해법으로 제안된 것 중 하나는 clustering ensemble 입니다. Ensemble 과정에서는 어떠한 군집화 알고리즘을 이용하여도 좋습니다 없습니다. 
+
+학습 속도가 빠른 k-means 를 이용하여 앙상블을 할 수도 있습니다. 한 번의 k-means 의 학습 결과 각 점들의 군집 아이디 (labels) 를 얻을 수 있습니다. 군집 아이디를 기준으로, 같은 군집에 속한 점들 간에 co-occurrence 를 계산합니다. k-means 를 100 번 학습하면 어떤 두 점은 최대 100 번의 co-occurrence 를 얻을 수 있고, 어떤 점은 한 번도 같은 군집에 속한 적이 없을 수도 있습니다. 이 co-occurrence 값을 점들 간의 affinity 로 이용합니다.
 
 점들 간의 pairwise similarity (affinity) 를 알기 때문에 이를 이용하여 agglomerative hierarchical clustering 을 수행합니다. 군집의 개수가 k 가 될때까지 작은 군집들을 병합하면 됩니다.
 
-정리하면 k-means ensemble 은 여러 번의 k-means 학습 결과를 통하여 점들 간의 co-occurrence 를 학습하고, 이를 affinity matrix 로 이용하여 agglomerative clustering 을 수행합니다. 이 방법이 생각보다 잘 작동합니다. 또한 parameter setting 에 대한 기준도 어느 정도 명확합니다. 단, 계산 비용이 싸지는 않습니다. 대체로 ensemble 을 위해 학습하는 k-means 의 반복 횟수가 많기 때문입니다.
+정리하면 k-means ensemble 은 여러 번의 k-means 학습 결과를 통하여 점들 간의 co-occurrence 를 학습하고, 이를 affinity matrix 로 이용하여 agglomerative clustering 을 수행합니다. 간단한 방법이지만 많은 효과적으로 작동합니다. 또한 parameter setting 에 대한 기준도 어느 정도 명확합니다. Kernel k-means 를 이용하려면 데이터 분포에 적합한 kernel 을 사용자가 직접 정해야 하는 어려움도 있습니다. 그보다는 ensembles 을 위하여 이용되는 parameters 를 설정하는 기준이 명확합니다. 단, 계산 비용이 싸지는 않습니다. 대체로 ensemble 을 위해 학습하는 k-means 의 반복 횟수가 많기 때문입니다.
 
-여하튼 이 과정을 KMeansEnsemble 에 구현하였습니다. Parameter 는 다음과 같습니다.
+이 과정을 KMeansEnsemble 에 구현하였습니다. Parameter 는 다음과 같습니다.
 
 ```
 n_clusters : 최종적으로 학습하고 싶은 군집의 개수
@@ -87,13 +89,13 @@ kmeans_ensemble = KMeansEnsemble(n_clusters, n_ensembles, n_units)
 labels = kmeans_ensemble.fit_predict(X)
 ```
 
-Out[]
+Out
 ```
 Iteration 1000 / 1000 was done
 Agglomerative clustering iters = 998 was done
 ```
 
-Sparsity 도 계산할 수 있습니다. 같은 점들 간에는 co-occurrence 를 계산하지 않았기 때문에 이 개수인 `n_data` 를 추가하였습니다. 그래도 97.1 % 의 pairs 은 co-occurrence 가 없습니다. 왠만한 점들은 서로 유사도가 없다고 해석할 수 있습니다.
+Sparsity 도 계산할 수 있습니다. 같은 점들 간에는 co-occurrence 를 계산하지 않았기 때문에 이 개수인 `n_data` 를 추가하였습니다. 그래도 97.1 % 의 pairs 은 co-occurrence 가 없습니다. 왠만한 점들은 서로 유사도가 가지지 않는다는 의미입니다.
 
 ```python
 nnz = kmeans_ensemble.affinity.nnz
@@ -101,7 +103,7 @@ sparsity = 1 - ((n_data + nnz) / (n_data ** 2))
 print('sparsity of affinity = {:.4}'.format(sparsity))
 ```
 
-Out[]
+Out
 ```
 sparsity of affinity = 0.9709
 ```
@@ -169,7 +171,7 @@ save(gp)
 reset_output()
 ```
 
-Out[]
+Out
 ```
 Iteration 1000 / 1000 was done
 Agglomerative clustering iters = 998 was done
@@ -183,7 +185,7 @@ sparsity = 1 - ((n_data + nnz) / (n_data ** 2))
 print('sparsity of affinity = {:.4}'.format(sparsity))
 ```
 
-Out[]
+Out
 ```
 sparsity of affinity = 0.9255
 ```
@@ -212,7 +214,7 @@ save(gp)
 reset_output()
 ```
 
-Out[]
+Out
 ```
 Iteration 1000 / 1000 was done
 Agglomerative clustering iters = 998 was done
@@ -226,7 +228,7 @@ sparsity = 1 - ((n_data + nnz) / (n_data ** 2))
 print('sparsity of affinity = {:.4}'.format(sparsity))
 ```
 
-Out[]
+Out
 ```
 sparsity of affinity = 0.7958
 ```
@@ -253,7 +255,7 @@ save(gp)
 reset_output()
 ```
 
-Out[]
+Out
 ```
 Iteration 1000 / 1000 was done
 Agglomerative clustering iters = 998 was done
@@ -267,7 +269,7 @@ sparsity = 1 - ((n_data + nnz) / (n_data ** 2))
 print('sparsity of affinity = {:.4}'.format(sparsity))
 ```
 
-Out[]
+Out
 ```
 sparsity of affinity = 0.2301
 ```
