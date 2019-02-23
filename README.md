@@ -76,8 +76,6 @@ Verbose mode 이기 때문에 1000 번의 k-means 반복 계산의 과정과 agg
 
 
 ```python
-import sys
-sys.path.append('../')
 from kmeans_ensemble import KMeansEnsemble
 
 n_clusters = 2
